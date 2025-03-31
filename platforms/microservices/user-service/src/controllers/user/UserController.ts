@@ -1,5 +1,5 @@
 import { IUser } from '../../models/interfaces/IUser';
-import { BaseController } from '../../../../../services/base-classes/dist';
+import { BaseController } from '../../../../../services/base-classes/src';
 
 /**
  * Contr�leur pour l'entit� User

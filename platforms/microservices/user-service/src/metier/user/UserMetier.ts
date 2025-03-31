@@ -1,6 +1,6 @@
 import { IUser } from '../../models/interfaces/IUser';
 
-import { BaseMetier } from '../../../../../services/base-classes/dist';
+import { BaseMetier } from '../../../../../services/base-classes/src';
 
 /**
  * M�tier pour l'entit� User

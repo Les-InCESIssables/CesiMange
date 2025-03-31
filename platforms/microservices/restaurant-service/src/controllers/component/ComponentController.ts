@@ -1,6 +1,6 @@
 import { IComponent } from '../../models/interfaces/IComponent';
 
-import { BaseController } from '../../../../../services/base-classes/dist';
+import { BaseController } from '../../../../../services/base-classes/src';
 
 /**
  * Contr�leur pour l'entit� Component

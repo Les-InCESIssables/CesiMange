@@ -1,5 +1,5 @@
 import { IBaseMetier } from './IBaseMetier';
-import { Repository, EDatabaseType } from '../../../../data-access-layer/dist';
+import { Repository, EDatabaseType } from '../../../../data-access-layer/src';
 
 /**
  * Contr�leur de base g�n�rique

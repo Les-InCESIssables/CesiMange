@@ -1,4 +1,4 @@
-import { IBaseCritereDTO } from '../../../../../services/base-classes/dist';
+import { IBaseCritereDTO } from '../../../../../services/base-classes/src';
 
 /**
  * Crit�res de base dont h�ritent tous les CritereDTOs

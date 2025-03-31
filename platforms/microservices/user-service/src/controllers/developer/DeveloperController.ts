@@ -1,5 +1,5 @@
 import { IDeveloper } from '../../models/interfaces/IDeveloper';
-import { BaseController } from '../../../../../services/base-classes/dist';
+import { BaseController } from '../../../../../services/base-classes/src';
 
 /**
  * Contr�leur pour l'entit� Developer

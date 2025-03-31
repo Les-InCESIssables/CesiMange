@@ -1,5 +1,5 @@
 import { IDeveloper } from '../../models/interfaces/IDeveloper';
-import { BaseMetier } from '../../../../../services/base-classes/dist';
+import { BaseMetier } from '../../../../../services/base-classes/src';
 
 /**
  * M�tier pour l'entit� Developer

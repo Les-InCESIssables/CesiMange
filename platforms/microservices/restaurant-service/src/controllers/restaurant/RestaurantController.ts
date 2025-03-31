@@ -1,6 +1,6 @@
 import { IRestaurant } from '../../models/interfaces/IRestaurant';
 
-import { BaseController } from '../../../../../services/base-classes/dist';
+import { BaseController } from '../../../../../services/base-classes/src';
 
 /**
  * Contr�leur pour l'entit� Restaurant
