@@ -15,13 +15,15 @@
       "outFiles": [
         "${workspaceFolder}/dist/microservices/auth-service/src/**/*.js",
         "${workspaceFolder}/../../services/data-access-layer/dist/**/*.js",
-        "${workspaceFolder}/../../services/base-classes/dist/**/*.js"
+        "${workspaceFolder}/../../services/base-classes/dist/**/*.js",
+        "${workspaceFolder}/../../services/message-broker-service/dist/**/*.js"
       ],
       "sourceMaps": true,
       "resolveSourceMapLocations": [
         "${workspaceFolder}/**",
         "${workspaceFolder}/../../services/data-access-layer/**",
         "${workspaceFolder}/../../services/base-classes/**",
+        "${workspaceFolder}/../../services/message-broker-service/**",
         "!**/node_modules/**"
       ],
       "restart": true,

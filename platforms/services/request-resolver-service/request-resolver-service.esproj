@@ -1,0 +1,5 @@
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.2518757">
+  <ItemGroup>
+    <None Include=".vscode\launch.json" />
+  </ItemGroup>
+</Project>

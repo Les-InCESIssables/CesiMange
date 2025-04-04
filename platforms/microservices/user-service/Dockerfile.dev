@@ -1,28 +1,41 @@
+# ===== Stage 1 : Builder =====
 FROM node:22.14-alpine AS builder
 WORKDIR /app
 
-# Copier l'intégralité du dépôt (contexte = racine)
-COPY . .
+# Copier uniquement les fichiers de dépendances pour profiter du cache
+COPY platforms/services/data-access-layer/package*.json platforms/services/data-access-layer/
+COPY platforms/services/base-classes/package*.json platforms/services/base-classes/
+COPY platforms/microservices/user-service/package*.json platforms/microservices/user-service/
 
-# On se positionne dans le dossier du user-service
-WORKDIR /app/platforms/microservices/user-service
-
-# Installer toutes les dépendances (dev incluses)
+# Installer les dépendances pour les modules partagés
+WORKDIR /app/platforms/services/data-access-layer
 RUN npm install
 
-# Copier (optionnel) et compiler si nécessaire
-RUN npm run build
+WORKDIR /app/platforms/services/base-classes
+RUN npm install
 
-# Image finale pour le développement
+# Installer les dépendances pour le user-service
+WORKDIR /app/platforms/microservices/user-service
+RUN npm install
+
+# Copier le reste du code du user-service (le bind mount peut écraser ces fichiers en dev)
+COPY platforms/microservices/user-service platforms/microservices/user-service
+
+# ===== Stage 2 : Image finale pour le développement =====
 FROM node:22.14-alpine
 WORKDIR /app
 
-# Copier tout le code du dépôt (on souhaite que les volumes montés écrasent ce contenu)
-COPY --from=builder /app /app
+# Copier uniquement le dossier du microservice depuis l'étape builder
+COPY --from=builder /app/platforms/microservices/user-service platforms/microservices/user-service
 
-# Réinstaller toutes les dépendances (pour s'assurer que nodemon et ts-node sont là)
 WORKDIR /app/platforms/microservices/user-service
-RUN npm install
+
+# Installer tsconfig-paths, nodemon et autres outils pour le hot reload
+RUN npm install -D tsconfig-paths && \
+    npm cache clear --force && \
+    npm install -g nodemon && \
+    npm install --no-audit && \
+    mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
 
 EXPOSE 4002
 CMD ["npm", "run", "dev"]

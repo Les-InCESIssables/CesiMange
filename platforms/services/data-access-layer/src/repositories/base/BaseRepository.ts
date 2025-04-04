@@ -7,13 +7,13 @@ import { SqlServerRepository } from "./SqlServerRepository";
 import { BaseCritereDTO } from "../../models/base/BaseCritereDTO";
 import { ObjectLiteral } from "typeorm";
 import { EDatabaseType } from "../../enums/EDatabaseType";
-
 /**
  * Repository de base générique qui sert de factory pour les implémentations spécifiques
  * @template DTO - Type de données retourné/manipulé qui étend BaseDTO
  * @template CritereDTO - Type des critères de recherche qui étend BaseCritereDTO
  */
-export abstract class BaseRepository<DTO, CritereDTO> implements IBaseRepository<DTO, CritereDTO> {
+export abstract class BaseRepository<DTO, CritereDTO> implements IBaseRepository<DTO, CritereDTO>
+{
     //#region Attributes
     protected _config: IRepositoryConfig;
     private _repository: AbstractDbRepository<DTO, CritereDTO>;
@@ -28,22 +28,26 @@ export abstract class BaseRepository<DTO, CritereDTO> implements IBaseRepository
     constructor (pConfig: IRepositoryConfig, pModel?: any)
     {
         this._config = pConfig;
-        try {
+        try
+        {
             // cm - Fabrique le repository approprié selon le type de base de données
-            if (this._config.TypeBDD == EDatabaseType.MONGODB) {
+            if (this._config.TypeBDD == EDatabaseType.MONGODB)
+            {
                 // cm - Initialise le repo Mongo DB
                 this._repository = new MongoDBRepository<DTO & Document, CritereDTO>(pConfig);
             } else if ((this._config.TypeBDD == EDatabaseType.SQL_SERVER) && pModel)
             {
                 // cm - Initialise le repo SqlServer
                 this._repository = new SqlServerRepository<DTO & ObjectLiteral, CritereDTO & BaseCritereDTO>(pConfig, pModel);
-            } else
+            }
+            else
             {
                 throw new Error(
                     `Type de base de données non supporté: ${this._config.TypeBDD}`
                 );
             }
-        } catch (e: any) {
+        } catch (e: any)
+        {
             throw new Error(e);
         }
     }
@@ -55,7 +59,8 @@ export abstract class BaseRepository<DTO, CritereDTO> implements IBaseRepository
      * Obtenir tous les éléments selon des critères
      * @param pCritereDTO - Critères de recherche
      */
-    async getItems(pCritereDTO: CritereDTO): Promise<DTO[]> {
+    async getItems(pCritereDTO: CritereDTO): Promise<DTO[]>
+    {
         return await this._repository.getItems(pCritereDTO);
     }
 
@@ -63,7 +68,8 @@ export abstract class BaseRepository<DTO, CritereDTO> implements IBaseRepository
      * Obtenir un élément par critères
      * @param pCritereDTO - Critères identifiant l'élément
      */
-    async getItem(pCritereDTO: CritereDTO): Promise<DTO> {
+    async getItem(pCritereDTO: CritereDTO): Promise<DTO>
+    {
         return await this._repository.getItem(pCritereDTO);
     }
 
@@ -71,7 +77,8 @@ export abstract class BaseRepository<DTO, CritereDTO> implements IBaseRepository
      * Créer un nouvel élément
      * @param pDTO - Données pour la création
      */
-    async createItem(pDTO: DTO): Promise<DTO> {
+    async createItem(pDTO: DTO): Promise<DTO>
+    {
         return await this._repository.createItem(pDTO);
     }
 
@@ -80,7 +87,8 @@ export abstract class BaseRepository<DTO, CritereDTO> implements IBaseRepository
      * @param pDTO - Données pour la mise à jour
      * @param pCritereDTO - Critères identifiant l'élément à mettre à jour
      */
-    async updateItem(pDTO: DTO, pCritereDTO: CritereDTO): Promise<DTO> {
+    async updateItem(pDTO: DTO, pCritereDTO: CritereDTO): Promise<DTO>
+    {
         return await this._repository.updateItem(pDTO, pCritereDTO);
     }
 
@@ -88,7 +96,8 @@ export abstract class BaseRepository<DTO, CritereDTO> implements IBaseRepository
      * Supprimer un élément
      * @param pCritereDTO - Critères pour la suppression
      */
-    async deleteItem(pCritereDTO: CritereDTO): Promise<boolean> {
+    async deleteItem(pCritereDTO: CritereDTO): Promise<boolean>
+    {
         return await this._repository.deleteItem(pCritereDTO);
     }
 
@@ -96,14 +105,16 @@ export abstract class BaseRepository<DTO, CritereDTO> implements IBaseRepository
      * Vérifier si un élément existe selon des critères
      * @param pCritereDTO - Critères de recherche
      */
-    async itemExists(pCritereDTO: CritereDTO): Promise<boolean> {
+    async itemExists(pCritereDTO: CritereDTO): Promise<boolean>
+    {
         return await this._repository.itemExists(pCritereDTO);
     }
 
     /**
      * Ferme la connexion à la base de données
      */
-    async disconnect(): Promise<void> {
+    async disconnect(): Promise<void>
+    {
         await this._repository.disconnect();
     }
     //#endregion

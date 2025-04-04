@@ -4,7 +4,7 @@ import { BaseMetier } from "../../../../../services/base-classes/src/metier/base
 
 /**
  * M�tier pour l'entit� Restaurant
- * @Author ModelGenerator - 2025-04-02T16:35:47.272Z - Cr�ation
+ * @Author ModelGenerator - 2025-04-03T17:32:16.736Z - Cr�ation
  */
 export class RestaurantMetier extends BaseMetier<IRestaurant, Partial<IRestaurant>> {
     constructor() {

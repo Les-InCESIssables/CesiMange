@@ -1,0 +1,53 @@
+# Dockerfile.mssql
+FROM mcr.microsoft.com/mssql/server:2019-latest
+
+ENV ACCEPT_EULA=Y
+ENV SA_PASSWORD=MyPass123!
+ENV MSSQL_PID=Developer
+
+# Passage en root pour installer les outils nécessaires
+USER root
+
+# Installer les prérequis
+RUN apt-get update && \
+    apt-get install -y curl apt-transport-https gnupg
+
+# Ajouter le dépôt Microsoft pour Ubuntu 20.04 (adapter selon votre version)
+RUN curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add - && \
+    curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list && \
+    apt-get update
+
+# Installer mssql-tools et unixodbc-dev (nécessaires pour sqlcmd)
+RUN apt-get install -y mssql-tools unixodbc-dev
+
+# Ajouter mssql-tools au PATH pour tous les utilisateurs
+ENV PATH="$PATH:/opt/mssql-tools/bin"
+
+# Installer dos2unix (si nécessaire pour convertir les fins de ligne)
+RUN apt-get install -y dos2unix
+
+# Définir les variables d'environnement MSSQL
+ENV MSSQL_PID=Express
+# Créer un dossier pour les scripts d'initialisation
+RUN mkdir -p /init-sql
+
+# Copier les scripts SQL de seed dans le container
+COPY seed/init-mssql-auth.sql /init-sql/
+
+# Copier le script d'entrée
+COPY entrypoint.sh /entrypoint.sh
+
+# Convertir les fins de ligne Windows en LF (Unix)
+RUN sed -i 's/\r$//' /entrypoint.sh
+
+# Rendre le script exécutable
+RUN chmod +x /entrypoint.sh
+
+# Revenir à l'utilisateur mssql
+USER mssql
+
+# Exposer le port MSSQL
+EXPOSE 1433
+
+# Définir le point d'entrée pour exécuter le script d'initialisation
+ENTRYPOINT ["/bin/bash", "./entrypoint.sh"]

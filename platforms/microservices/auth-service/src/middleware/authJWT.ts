@@ -4,9 +4,12 @@ import { Secret, SignOptions, JwtPayload as JwtPayloadType, VerifyOptions } from
 import crypto from 'crypto';
 
 // Étendre l'interface Request d'Express pour inclure l'utilisateur avec le format exact
-declare global {
-    namespace Express {
-        interface Request {
+declare global
+{
+    namespace Express
+    {
+        interface Request
+        {
             user?: JwtPayload & {
                 id: number;
                 username: string;
@@ -22,7 +25,8 @@ declare global {
  * @author Mahmoud Charif - 01/04/2025 - CESIMANGE-70 - Creation
  * @modified - 02/04/2025 - Implémentation de la sécurité JWT+CSRF
  */
-export class AuthJWT {
+export class AuthJWT
+{
     private static readonly JWT_SECRET: string = process.env.JWT_SECRET || "default_secret_key";
 
     /**
@@ -31,7 +35,8 @@ export class AuthJWT {
      * @param options Options de signature JWT
      * @returns Le token JWT généré
      */
-    public static generateToken(payload: object, options?: SignOptions): string {
+    public static generateToken(payload: object, options?: SignOptions): string
+    {
         let lSignOptions: SignOptions = {
             expiresIn: '8h',
             ...options
@@ -49,10 +54,13 @@ export class AuthJWT {
      * @param token Le token à vérifier
      * @returns Le payload décodé ou null si le token est invalide
      */
-    public static verifyToken(token: string): JwtPayload | null {
-        try {
+    public static verifyToken(token: string): JwtPayload | null
+    {
+        try
+        {
             return jwt.verify(token, this.JWT_SECRET, { algorithms: ['HS256'] }) as JwtPayload;
-        } catch (error) {
+        } catch (error)
+        {
             console.error('Erreur de vérification JWT:', error);
             return null;
         }
@@ -61,14 +69,16 @@ export class AuthJWT {
     /**
      * Génère un token CSRF cryptographiquement sécurisé
      */
-    public static generateCSRFToken(): string {
+    public static generateCSRFToken(): string
+    {
         return crypto.randomBytes(64).toString('hex');
     }
 
     /**
      * Génère un refresh token cryptographiquement sécurisé
      */
-    public static generateRefreshToken(): string {
+    public static generateRefreshToken(): string
+    {
         return crypto.randomBytes(128).toString('base64');
     }
 
@@ -76,52 +86,101 @@ export class AuthJWT {
      * Middleware pour authentifier les requêtes avec JWT et CSRF token
      * Le JWT est récupéré depuis le cookie HttpOnly et le CSRF token depuis l'en-tête
      */
-    public static authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
-        try {
+    public static authenticateJWT = (req: Request, res: Response, next: NextFunction) =>
+    {
+        try
+        {
             // cm - Récupérer le JWT depuis le cookie
             const lJwtToken = req.cookies.access_token;
 
-            if (!lJwtToken) {
+            if (!lJwtToken)
+            {
                 return res.status(401).json({ message: 'JWT manquant dans les cookies' });
             }
 
             // 2. Vérifier et décoder le JWT
-            const decoded = this.verifyToken(lJwtToken);
-            if (!decoded) {
+            const lSession = this.verifyToken(lJwtToken);
+
+            if (!lSession)
+            {
                 return res.status(403).json({ message: 'JWT invalide ou expiré' });
             }
 
             // 3. Récupérer le token CSRF de l'en-tête
             const csrfToken = req.headers['x-xsrf-token'] as string;
 
-            if (!csrfToken) {
+            if (!csrfToken)
+            {
                 return res.status(403).json({ message: 'Token CSRF manquant dans les en-têtes' });
             }
 
             // 4. Vérifier que le token CSRF de l'en-tête correspond à celui stocké dans le JWT
-            if (decoded.xsrfToken !== csrfToken) {
+            if (lSession.xsrfToken !== csrfToken)
+            {
                 return res.status(403).json({ message: 'Token CSRF invalide' });
             }
 
             // 5. Tout est valide, ajouter les informations utilisateur à la requête
-            req.user = decoded as Express.Request['user'];
+            req.user = lSession as Express.Request['user'];
             next();
-        } catch (error) {
+        } catch (error)
+        {
             console.error('Erreur d\'authentification:', error);
             return res.status(500).json({ message: 'Erreur interne d\'authentification' });
         }
     };
 
     /**
+     * Middleware pour authentifier les requêtes avec JWT et CSRF token
+     * Le JWT est récupéré depuis le cookie HttpOnly et le CSRF token depuis l'en-tête
+     */
+    public static checkId = (req: Request, res: Response) =>
+    {
+        try
+        {
+            // cm - Récupérer le JWT depuis le cookie
+            const lJwtToken = req.cookies.access_token;
+
+            if (!lJwtToken)
+            {
+                return res.status(401).json({ message: 'JWT manquant dans les cookies' });
+            }
+
+            // 2. Vérifier et décoder le JWT
+            const lSession = this.verifyToken(lJwtToken);
+
+            if (!lSession)
+            {
+                return res.status(403).json({ message: 'JWT invalide ou expiré' });
+            }
+
+            if (req.body.id != lSession.id)
+            {
+                return res.status(403).json({ message: 'Accès refusée' });
+            }
+
+        } catch (error)
+        {
+            console.error('Erreur d\'authentification:', error);
+            return res.status(500).json({ message: 'Erreur interne d\'authentification' });
+        }
+    };
+
+
+
+    /**
      * Middleware pour vérifier si l'utilisateur a un rôle spécifique
      * @param roles Rôle(s) requis pour accéder à la ressource
      * @returns Middleware Express
      */
-    public static hasRole = (roles: string | string[]): ((req: Request, res: Response, next: NextFunction) => void) => {
+    public static hasRole = (roles: string | string[]): ((req: Request, res: Response, next: NextFunction) => void) =>
+    {
         const requiredRoles = Array.isArray(roles) ? roles : [roles];
 
-        return (req: Request, res: Response, next: NextFunction) => {
-            if (!req.user) {
+        return (req: Request, res: Response, next: NextFunction) =>
+        {
+            if (!req.user)
+            {
                 return res.status(401).json({ message: 'Authentification requise' });
             }
 
@@ -131,7 +190,8 @@ export class AuthJWT {
 
             const hasRequiredRole = requiredRoles.some(role => userRoleArray.includes(role));
 
-            if (!hasRequiredRole) {
+            if (!hasRequiredRole)
+            {
                 return res.status(403).json({ message: 'Accès refusé: rôle requis' });
             }
 
@@ -140,44 +200,17 @@ export class AuthJWT {
     };
 
     /**
-     * Middleware pour vérifier si l'utilisateur est propriétaire d'une ressource ou a un rôle d'admin
-     * @param idExtractor Fonction pour extraire l'ID de la ressource demandée
-     * @returns Middleware Express
-     */
-    public static isResourceOwnerOrAdmin = (
-        idExtractor: (req: Request) => number
-    ): ((req: Request, res: Response, next: NextFunction) => void) => {
-        return (req: Request, res: Response, next: NextFunction) => {
-            if (!req.user) {
-                return res.status(401).json({ message: 'Authentification requise' });
-            }
-
-            const resourceId = idExtractor(req);
-            const userId = req.user.id;
-
-            // Adapter pour gérer à la fois 'roles' (utilisé dans le JWT) et 'role' (utilisé dans le contrôleur)
-            const userRoles = req.user.roles || req.user.role;
-            const userRoleArray = Array.isArray(userRoles) ? userRoles : [userRoles];
-            const isAdmin = userRoleArray.includes('admin');
-
-            // Autoriser si l'utilisateur est propriétaire de la ressource ou s'il est admin
-            if (userId === resourceId || isAdmin) {
-                return next();
-            }
-
-            return res.status(403).json({ message: 'Accès non autorisé à cette ressource' });
-        };
-    };
-
-    /**
      * Route pour rafraîchir le token JWT lorsque le token actuel est sur le point d'expirer
      * Utilise le refresh token stocké dans un cookie HttpOnly pour générer un nouveau JWT
      */
-    public static refreshTokenRoute = async (req: Request, res: Response): Promise<void> => {
-        try {
+    public static refreshTokenRoute = async (req: Request, res: Response): Promise<void> =>
+    {
+        try
+        {
             const refreshToken = req.cookies.refresh_token;
 
-            if (!refreshToken) {
+            if (!refreshToken)
+            {
                 res.status(401).json({ message: 'Refresh token manquant' });
                 return;
             }
@@ -186,7 +219,8 @@ export class AuthJWT {
             // (Cette partie doit être implémentée selon votre modèle de données)
             const user = await this.findUserByRefreshToken(refreshToken);
 
-            if (!user) {
+            if (!user)
+            {
                 res.status(403).json({ message: 'Refresh token invalide' });
                 return;
             }
@@ -233,7 +267,8 @@ export class AuthJWT {
                 REFRESH_TOKEN_EXPIRATION_MS: parseInt(process.env.REFRESH_TOKEN_EXPIRATION_MS || '2592000000')
             });
 
-        } catch (error) {
+        } catch (error)
+        {
             console.error('Erreur lors du rafraîchissement du token:', error);
             res.status(500).json({ message: 'Erreur lors du rafraîchissement du token' });
         }
@@ -244,7 +279,8 @@ export class AuthJWT {
      * @param refreshToken Le refresh token à rechercher
      * @returns L'utilisateur trouvé ou null
      */
-    private static async findUserByRefreshToken(refreshToken: string): Promise<any> {
+    private static async findUserByRefreshToken(refreshToken: string): Promise<any>
+    {
         // Cette méthode doit être implémentée selon votre modèle de données et ORM
         // Exemple avec une méthode fictive: 
         // return await UserRepository.findByRefreshToken(refreshToken);
@@ -256,7 +292,8 @@ export class AuthJWT {
      * Met à jour le refresh token d'un utilisateur
      * @param user L'utilisateur à mettre à jour
      */
-    private static async updateUserRefreshToken(user: any): Promise<void> {
+    private static async updateUserRefreshToken(user: any): Promise<void>
+    {
         // Cette méthode doit être implémentée selon votre modèle de données et ORM
         // Exemple avec une méthode fictive:
         // await UserRepository.update(user);

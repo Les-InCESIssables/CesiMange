@@ -9,6 +9,7 @@ export abstract class BaseMetier<DTO, CritereDTO> implements IBaseRepository<DTO
 {
     protected Repository: Repository<DTO, CritereDTO>;
     protected CollectionName: string;
+    protected ServiceName?: string;
 
     //#region CTOR
     constructor (pCollectionName: string, pModel?: any)
@@ -148,6 +149,9 @@ export abstract class BaseMetier<DTO, CritereDTO> implements IBaseRepository<DTO
             // Déléguer la suppression au repository
             const result = await this.Repository.deleteItem(pCritereDTO);
 
+            if (result)
+                await this.afterDeleteItem(pCritereDTO);
+
             return result;
         } catch (error)
         {
@@ -265,6 +269,31 @@ export abstract class BaseMetier<DTO, CritereDTO> implements IBaseRepository<DTO
     protected async beforeDeleteItem(pCritereDTO: CritereDTO): Promise<void>
     {
         // Méthode à implémenter dans les classes dérivées
+    }
+
+    protected afterGetItems(pDTOs: DTO[]): DTO[]
+    {
+        return pDTOs;
+    }
+
+    protected async afterGetItem(pDTO: DTO, pRes?: Response): Promise<DTO>
+    {
+        return pDTO;
+    }
+
+    protected async afterCreateItem(pDTO: DTO): Promise<DTO>
+    {
+        return pDTO; // Par défaut, retourne l'objet non modifié
+    }
+
+    protected async afterUpdateItem(pDTO: DTO, pCritereDTO: CritereDTO): Promise<DTO>
+    {
+        return pDTO; // Par défaut, retourne l'objet non modifié
+    }
+
+    protected async afterDeleteItem(pCritereDTO: CritereDTO): Promise<void>
+    {
+        // À implémenter dans les classes dérivées
     }
     //#endregion
 }

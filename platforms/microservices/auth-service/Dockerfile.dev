@@ -1,28 +1,46 @@
+# ===== Stage 1 : Builder =====
 FROM node:22.14-alpine AS builder
 WORKDIR /app
 
-# Copier l'intégralité du dépôt (contexte = racine)
-COPY . .
+# Copier uniquement les fichiers de dépendances pour profiter du cache
+# (Si auth-service utilise des modules partagés, copie aussi leurs package.json)
+COPY platforms/services/data-access-layer/package*.json platforms/services/data-access-layer/
+COPY platforms/services/base-classes/package*.json platforms/services/base-classes/
+COPY platforms/microservices/auth-service/package*.json platforms/microservices/auth-service/
 
-# On se positionne dans le dossier du auth-service
-WORKDIR /app/platforms/microservices/auth-service
-
-# Installer toutes les dépendances (dev incluses)
+# Installer les dépendances pour les modules partagés
+WORKDIR /app/platforms/services/data-access-layer
 RUN npm install
 
-# Copier (optionnel) et compiler si nécessaire
-RUN npm run build
+WORKDIR /app/platforms/services/base-classes
+RUN npm install
 
-# Image finale pour le développement
+# Installer les dépendances pour auth-service et forcer la recompilation des modules natifs (ex: bcrypt)
+WORKDIR /app/platforms/microservices/auth-service
+RUN npm install && npm rebuild bcrypt
+
+# Copier le reste du code source pour auth-service
+COPY platforms/microservices/auth-service platforms/microservices/auth-service
+
+# ===== Stage 2 : Image finale pour le développement =====
 FROM node:22.14-alpine
 WORKDIR /app
 
-# Copier tout le code du dépôt (on souhaite que les volumes montés écrasent ce contenu)
-COPY --from=builder /app /app
+# Copier uniquement le dossier auth-service depuis l'étape builder
+COPY --from=builder /app/platforms/microservices/auth-service platforms/microservices/auth-service
 
-# Réinstaller toutes les dépendances (pour s'assurer que nodemon et ts-node sont là)
 WORKDIR /app/platforms/microservices/auth-service
-RUN npm install
+
+# Installer tsconfig-paths pour la résolution d'alias à l'exécution et installer globalement nodemon
+# On nettoie également le cache npm et on crée le dossier de cache avec les bonnes permissions
+RUN npm install -D tsconfig-paths && \
+    npm cache clear --force && \
+    npm install -g nodemon && \
+    npm install --no-audit && \
+    mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
 
 EXPOSE 4001
+
+# Le script "dev" dans ton package.json doit être configuré pour utiliser nodemon avec ts-node et tsconfig-paths, par exemple :
+# "dev": "nodemon --watch src --ext ts,json --ignore node_modules --exec \"ts-node -r tsconfig-paths/register src/app.ts\""
 CMD ["npm", "run", "dev"]

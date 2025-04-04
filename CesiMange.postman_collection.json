@@ -8,7 +8,7 @@
 	},
 	"item": [
 		{
-			"name": "Users",
+			"name": "UserProfile",
 			"item": [
 				{
 					"name": "Username",
@@ -20,7 +20,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nameLike\": \"Char\"\r\n}",
+							"raw": "{\r\n    \"nameLike\": \"ake faik fouk fake fike\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -28,11 +28,41 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/api/users/",
+							"raw": "localhost:8080/users",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Adresse",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"addressLike\": \"a\",\r\n    \"limit\": 30,\r\n    \"skip\": 1,\r\n    \"sort\": \"desc\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4002/api/users/",
+							"host": [
+								"localhost"
+							],
+							"port": "4002",
 							"path": [
 								"api",
 								"users",
@@ -52,7 +82,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"nameLike\": \"Char\"\r\n}",
+							"raw": "{\r\n\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -60,14 +90,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/api/users/",
+							"raw": "localhost:4002/api/user-profile/",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "4002",
 							"path": [
 								"api",
-								"users",
+								"user-profile",
 								""
 							]
 						}
@@ -118,15 +148,15 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/api/users/67db2a11b7daf99cbb9eceec",
+							"raw": "localhost:4002/api/users/67e01ea3c3dee80e3e94cdc1",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "4002",
 							"path": [
 								"api",
 								"users",
-								"67db2a11b7daf99cbb9eceec"
+								"67e01ea3c3dee80e3e94cdc1"
 							]
 						}
 					},
@@ -147,11 +177,11 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/api/users/67db2a11b7daf99cbb9eceec",
+							"raw": "localhost:4002/api/users/67db2a11b7daf99cbb9eceec",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "4002",
 							"path": [
 								"api",
 								"users",
@@ -192,6 +222,354 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "All Users Like",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4002/api/user-profile/",
+							"host": [
+								"localhost"
+							],
+							"port": "4002",
+							"path": [
+								"api",
+								"user-profile",
+								""
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Faik",
+					"item": [
+						{
+							"name": "Login",
+							"request": {
+								"auth": {
+									"type": "bearer"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"password_hash\": \"monmdp\",\r\n    \"email\": \"monemail@mail.fr\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:4001/auth/login/",
+									"host": [
+										"localhost"
+									],
+									"port": "4001",
+									"path": [
+										"auth",
+										"login",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register",
+							"request": {
+								"auth": {
+									"type": "bearer"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"charif\",\r\n    \"password_hash\": \"monmdp\",\r\n    \"email\": \"monemail@mail\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:4001/auth/register/",
+									"host": [
+										"localhost"
+									],
+									"port": "4001",
+									"path": [
+										"auth",
+										"register",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "charif",
+					"item": [
+						{
+							"name": "Login",
+							"request": {
+								"auth": {
+									"type": "bearer"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"password_hash\": \"monmdp\",\r\n    \"email\": \"monemail@mail.fr\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:4001/auth/login/",
+									"host": [
+										"localhost"
+									],
+									"port": "4001",
+									"path": [
+										"auth",
+										"login",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Register",
+							"request": {
+								"auth": {
+									"type": "bearer"
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"username\": \"charif\",\r\n    \"password_hash\": \"monmdp\",\r\n    \"email\": \"monemail@mail\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:4001/auth/register/",
+									"host": [
+										"localhost"
+									],
+									"port": "4001",
+									"path": [
+										"auth",
+										"register",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "DeleteAccount",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6OCwidXNlcm5hbWUiOiJtb25lbWFpbEBtYWlsLmZyIiwicm9sZXMiOiJ1c2VyIiwiaWF0IjoxNzQzNTgxMTE2LCJleHAiOjE3NDM2MDk5MTZ9.WAXhMGq_egqKsWJ6uuQDiH-z-YSIu8ST4l3iG7wd7po",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "x-xsrf-token",
+								"value": "dce31717f9a815316d833435bb3f42a05e698ee6c9a361f5b36fb79d925de9c343cc6d00a976f95b2602a96c76b8c87cc7bde4a07cb9a331204e776938d93a39",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4001/auth/?id=15",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"auth",
+								""
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "15"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "usertest",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJtb25lbWFpbEBtYWlsIiwicm9sZXMiOiJ1c2VyIiwiaWF0IjoxNzQzNTgwMTI4LCJleHAiOjE3NDM2MDg5Mjh9.q66R-RX7MuwvzMH3DT0u4egBtyzpnhQQAgY6XLwCcmM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4001/auth/user/",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"auth",
+								"user",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Admin",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJtb25lbWFpbEBtYWlsIiwicm9sZXMiOiJ1c2VyIiwiaWF0IjoxNzQzNTgwMTI4LCJleHAiOjE3NDM2MDg5Mjh9.q66R-RX7MuwvzMH3DT0u4egBtyzpnhQQAgY6XLwCcmM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"username\": \"charif\",\r\n    \"password_hash\": \"monmdp\",\r\n    \"email\": \"monemail@mail\",\r\n    \"role\": \"admin\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4001/auth/admin/",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"auth",
+								"admin",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwidXNlcm5hbWUiOiJtb25lbWFpbEBtYWlsIiwicm9sZXMiOiJ1c2VyIiwiaWF0IjoxNzQzNTgwMTI4LCJleHAiOjE3NDM2MDg5Mjh9.q66R-RX7MuwvzMH3DT0u4egBtyzpnhQQAgY6XLwCcmM",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:4001/auth/logout/",
+							"host": [
+								"localhost"
+							],
+							"port": "4001",
+							"path": [
+								"auth",
+								"logout",
+								""
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -199,19 +577,16 @@
 			"name": "Resto",
 			"item": [
 				{
-					"name": "localhost:8080/api/resto/",
+					"name": "AllResto",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "noauth"
-						},
 						"method": "GET",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{   \r\n    \"nameLike\":\"Y\", \r\n    \"menu\": {\r\n        \"nameLike\": \"X\"\r\n    },\r\n    \"phoneLike\":\"+\",\r\n    \"SortDirection\": \"asc\",\r\n    \"Sort\":\"name\"\r\n}",
+							"raw": "{\r\n\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -219,49 +594,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:8080/api/resto/",
+							"raw": "localhost:4002/api/user-profile/",
 							"host": [
 								"localhost"
 							],
-							"port": "8080",
+							"port": "4002",
 							"path": [
 								"api",
-								"resto",
-								""
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "localhost:8080/api/resto/ Copy",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
-					"request": {
-						"auth": {
-							"type": "noauth"
-						},
-						"method": "GET",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"created_atLike\": \"2023-01-24T00:00:00.000Z\"\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:8080/api/order/",
-							"host": [
-								"localhost"
-							],
-							"port": "8080",
-							"path": [
-								"api",
-								"order",
+								"user-profile",
 								""
 							]
 						}
@@ -271,36 +611,17 @@
 			]
 		},
 		{
-			"name": "TestPing",
-			"protocolProfileBehavior": {
-				"disableBodyPruning": true
-			},
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": "{\r\n    \"phone\": \"+444541300\"\r\n}",
-					"options": {
-						"raw": {
-							"language": "json"
-						}
-					}
-				},
-				"url": {
-					"raw": "localhost:8080/api/users/",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"users",
-						""
-					]
+			"name": "resolver",
+			"item": [
+				{
+					"name": "New Request",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
 				}
-			},
-			"response": []
+			]
 		}
 	]
 }

@@ -1,14 +1,16 @@
 import { ObjectLiteral } from "typeorm";
+import { BaseCritereDTO } from "../../../../../../services/data-access-layer/src/models/base/BaseCritereDTO";
+
 /**
  * CritereDTO pour la recherche d'entit�s SQL Server Transactions
- * @author DTO Generator - 2025-04-02T16:35:50.239Z - Creation
+ * @author DTO Generator - 2025-04-03T17:32:20.333Z - Creation
  */
-export class TransactionsCritereDTO implements ObjectLiteral
+export class TransactionsCritereDTO extends BaseCritereDTO implements ObjectLiteral
 {
     /**
-     * Crit�re de recherche pour transactions_id
+     * Crit�re de recherche pour id
      */
-    transactions_id?: number | undefined;
+    id?: number | undefined;
 
     /**
      * Crit�re de recherche pour order_id

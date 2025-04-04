@@ -1,29 +1,29 @@
 {
     "name": "user-service",
+    "description": "user-service",
     "version": "0.0.0",
     "private": true,
-  "scripts": {
-    "build": "tsc --build",
-    "clean": "tsc --build --clean",
-    "start": "node dist\\user-service\\app.js",
-    "dev": "nodemon --exec ts-node src/app.ts --watch src"
-  },
-    "description": "user-service",
     "author": {
         "name": ""
     },
     "main": "app.ts",
+    "scripts": {
+        "build": "tsc --build",
+        "clean": "tsc --build --clean",
+        "start": "node dist\\user-service\\app.js",
+        "dev": "nodemon -L"
+    },
     "dependencies": {
         "cors": "^2.8.5",
         "debug": "^2.2.0",
         "dotenv": "^16.4.7",
         "express": "^4.14.0",
         "helmet": "^8.1.0",
-        "morgan": "^1.10.0",
         "mongoose": "8.13.1",
-        "typeorm": "0.4.0-alpha.1",
+        "morgan": "^1.10.0",
         "mssql": "7.3.0",
-        "reflect-metadata": "0.2.2"
+        "reflect-metadata": "0.2.2",
+        "typeorm": "0.4.0-alpha.1"
     },
     "devDependencies": {
         "@types/cors": "^2.8.17",
@@ -34,11 +34,14 @@
         "@types/node": "^14.14.7",
         "@typescript-eslint/eslint-plugin": "^5.33.0",
         "@typescript-eslint/parser": "^5.33.0",
+        "cross-env": "^7.0.3",
+        "debug": "^2.2.0",
         "eslint": "^8.21.0",
         "nodemon": "^3.1.9",
         "ts-node": "^10.9.2",
-        "typescript": "^4.5.2",
-        "typeorm": "0.4.0-alpha.1"
+        "tsconfig-paths": "^4.2.0",
+        "typeorm": "0.4.0-alpha.1",
+        "typescript": "^4.5.2"
     },
     "eslintConfig": {
         "parser": "@typescript-eslint/parser",

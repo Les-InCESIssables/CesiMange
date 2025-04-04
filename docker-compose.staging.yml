@@ -1,69 +1,48 @@
 services:
-    # Microservice user-service en staging (utilise MongoDB)
+    auth-service:
+        build:
+            context: .
+            dockerfile: platforms/microservices/auth-service/Dockerfile.prod
+        container_name: auth-service-prod
+        ports:
+            - '4001:4001'
+        env_file:
+            - ./platforms/microservices/auth-service/.env.production
+        networks:
+            - api_network
+        command: ['npm', 'start']
+
     user-service:
         build:
             context: .
-            dockerfile: platforms/microservices/user-service/Dockerfile
-        container_name: user-service-staging
+            dockerfile: platforms/microservices/user-service/Dockerfile.prod
+        container_name: user-service-prod
         ports:
             - '4002:4002'
-        environment:
-            - NODE_ENV=staging
-            - PORT=4002
-            - CONNECTION_STRING=mongodb://mongodb-user-staging:27017/user_db
+        env_file:
+            - ./platforms/microservices/user-service/.env.production
         networks:
             - api_network
+        command: ['npm', 'start']
 
-    # Microservice restaurant-service en staging (utilise MongoDB)
     restaurant-service:
         build:
             context: .
-            dockerfile: platforms/microservices/restaurant-service/Dockerfile
-        container_name: restaurant-service-staging
+            dockerfile: platforms/microservices/restaurant-service/Dockerfile.prod
+        container_name: restaurant-service-prod
         ports:
             - '4003:4003'
-        environment:
-            - NODE_ENV=staging
-            - PORT=4003
-            - CONNECTION_STRING=mongodb://mongodb-restaurant-staging:27017/restaurant_db
+        env_file:
+            - ./platforms/microservices/restaurant-service/.env.production
         networks:
             - api_network
+        command: ['npm', 'start']
 
-    # Exemple d'un microservice utilisant SQL Server (par exemple, auth-service)
-    # auth-service:
-    #    build:
-    #        context: .
-    #        dockerfile: platforms/microservices/auth-service/Dockerfile
-    #    container_name: auth-service-staging
-    #    ports:
-    #        - '4004:4004'
-    #    environment:
-    #        - NODE_ENV=staging
-    #        - PORT=4004
-    #        - CONNECTION_STRING=Server=sqlserver-auth-staging:1433;Database=auth_db;User Id=sa;Password=YourStrong!Passw0rd;
-    #    networks:
-    #        - api_network
-
-    # API Gateway Nginx pour staging
-    nginx-gateway:
-        build:
-            context: .
-            dockerfile: platforms/nginx-gateway/Dockerfile
-        container_name: nginx-gateway-staging
-        ports:
-            - '8080:80'
-        environment:
-            - NGINX_PORT=8080
-            - NGINX_HOST=staging.example.com
-        networks:
-            - api_network
-
-    # Service MongoDB pour user-service en staging
-    mongodb-user-staging:
+    mongodb-user:
         image: mongo:latest
-        container_name: mongodb-user-staging
+        container_name: db-mongodb-user-prod
         ports:
-            - '27017:27017'
+            - '27019:27017'
         volumes:
             - type: bind
               source: ./platforms/data/mongodb/user-service
@@ -71,10 +50,9 @@ services:
         networks:
             - api_network
 
-    # Service MongoDB pour restaurant-service en staging
-    mongodb-restaurant-staging:
+    mongodb-restaurant:
         image: mongo:latest
-        container_name: mongodb-restaurant-staging
+        container_name: db-mongodb-restaurant-prod
         ports:
             - '27018:27017'
         volumes:
@@ -84,21 +62,34 @@ services:
         networks:
             - api_network
 
-    # Service SQL Server pour auth-service en staging
-    # sqlserver-auth-staging:
-    #    image: mcr.microsoft.com/mssql/server:2019-latest
-    #    container_name: sqlserver-auth-staging
-    #    environment:
-    #        - SA_PASSWORD=YourStrong!Passw0rd
-    #        - ACCEPT_EULA=Y
-    #    ports:
-    #        - '1433:1433'
-    #    volumes:
-    #        - type: bind
-    #          source: ./platforms/data/sqlserver/auth-service
-    #          target: /var/opt/mssql
-    #    networks:
-    #        - api_network
+    mssql-auth-service:
+        image: mcr.microsoft.com/mssql/server:2019-latest
+        container_name: db-mssql-auth-prod
+        ports:
+            - '1433:1433'
+        volumes:
+            - ./platforms/data/sqlserver/auth-service/data:/var/opt/mssql/data
+            - ./platforms/data/sqlserver/auth-service/log:/var/opt/mssql/log
+            - ./platforms/data/sqlserver/auth-service/secrets:/var/opt/mssql/secrets
+        environment:
+            SA_PASSWORD: 'ProdPassword123!'
+            ACCEPT_EULA: 'Y'
+        networks:
+            - api_network
+
+    nginx-gateway:
+        build:
+            context: .
+            dockerfile: platforms/nginx-gateway/Dockerfile
+        container_name: nginx-gateway-prod
+        ports:
+            - '80:80'
+        env_file:
+            - ./platforms/nginx-gateway/.env.production
+        environment:
+            - ENV=production
+        networks:
+            - api_network
 
 networks:
     api_network:

@@ -1,20 +1,42 @@
 services:
+    auth-service:
+        build:
+            context: .
+            dockerfile: platforms/microservices/auth-service/Dockerfile.dev
+        container_name: auth-service
+        ports:
+            - '4001:4001'
+        environment:
+            - NODE_ENV=development
+            - DOCKER_ENV=true
+        env_file:
+            - ./platforms/microservices/auth-service/.env.development
+        volumes:
+            - ./platforms/microservices/auth-service:/app/platforms/microservices/auth-service
+            - ./platforms/services/base-classes:/app/platforms/services/base-classes
+            - ./platforms/services/data-access-layer:/app/platforms/services/data-access-layer
+            # Volume anonyme pour préserver les node_modules du container
+            - /app/platforms/microservices/auth-service/node_modules
+        networks:
+            - api_network
+        command: ['npm', 'run', 'dev']
+
     user-service:
         build:
             context: .
             dockerfile: platforms/microservices/user-service/Dockerfile.dev
-        container_name: user-service-dev
+        container_name: user-service
         ports:
             - '4002:4002'
         environment:
             - NODE_ENV=development
-            - PORT=4002
-            # Ici, on n'injecte pas CONNECTION_STRING car le .env est monté
+            - DOCKER_ENV=true
+        env_file:
+            - ./platforms/microservices/user-service/.env.development
         volumes:
             - ./platforms/microservices/user-service:/app/platforms/microservices/user-service
             - ./platforms/services/base-classes:/app/platforms/services/base-classes
             - ./platforms/services/data-access-layer:/app/platforms/services/data-access-layer
-            - ./platforms/microservices/user-service/.env:/app/platforms/microservices/user-service/.env
         networks:
             - api_network
         command: ['npm', 'run', 'dev']
@@ -23,20 +45,64 @@ services:
         build:
             context: .
             dockerfile: platforms/microservices/restaurant-service/Dockerfile.dev
-        container_name: restaurant-service-dev
+        container_name: restaurant-service
         ports:
             - '4003:4003'
         environment:
             - NODE_ENV=development
-            - PORT=4003
+            - DOCKER_ENV=true
+        env_file:
+            - ./platforms/microservices/restaurant-service/.env.development
         volumes:
             - ./platforms/microservices/restaurant-service:/app/platforms/microservices/restaurant-service
             - ./platforms/services/base-classes:/app/platforms/services/base-classes
             - ./platforms/services/data-access-layer:/app/platforms/services/data-access-layer
-            - ./platforms/microservices/restaurant-service/.env:/app/platforms/microservices/restaurant-service/.env
         networks:
             - api_network
         command: ['npm', 'run', 'dev']
+
+    mongodb-user:
+        build:
+            context: ./platforms/databases/mongodb/user-service
+            dockerfile: Dockerfile.mongodb
+        container_name: db-mongodb-user
+        ports:
+            - '27018:27017'
+        volumes:
+            - ./platforms/databases/mongodb/user-service/data:/data/db
+            - ./platforms/databases/mongodb/user-service/seed:/docker-entrypoint-initdb.d
+        networks:
+            - api_network
+
+    mongodb-restaurant:
+        build:
+            context: ./platforms/databases/mongodb/restaurant-service
+            dockerfile: Dockerfile.mongodb
+        container_name: db-mongodb-restaurant
+        ports:
+            - '27019:27017'
+        volumes:
+            - ./platforms/databases/mongodb/restaurant-service/data:/data/db
+            - ./platforms/databases/mongodb/restaurant-service/seed:/docker-entrypoint-initdb.d
+        networks:
+            - api_network
+
+    mssql-auth:
+        build:
+            context: ./platforms/databases/sqlserver/auth-service
+            dockerfile: Dockerfile.mssql
+        container_name: db-mssql-auth
+        ports:
+            - '1433:1433'
+        volumes:
+            - ./platforms/databases/sqlserver/auth-service/data:/var/opt/mssql/data
+            - ./platforms/databases/sqlserver/auth-service/log:/var/opt/mssql/log
+            - ./platforms/databases/sqlserver/auth-service/secrets:/var/opt/mssql/secrets
+            - ./platforms/databases/sqlserver/auth-service/seed:/init-sql
+            #- ./platforms/databases/sqlserver/auth-service/seed:/init-sql # Montre le dossier seed
+
+        networks:
+            - api_network
 
     nginx-gateway:
         build:
@@ -46,49 +112,9 @@ services:
         ports:
             - '8080:80'
         environment:
-            - NGINX_PORT=8080
-            - NGINX_HOST=localhost
+            - ENV=development
         networks:
             - api_network
-
-    mongodb-user:
-        image: mongo:latest
-        container_name: mongodb-user
-        ports:
-            - '27017:27017'
-        volumes:
-            - type: bind
-              source: ./platforms/data/mongodb/user-service
-              target: /data/db
-        networks:
-            - api_network
-
-    mongodb-restaurant:
-        image: mongo:latest
-        container_name: mongodb-restaurant
-        ports:
-            - '27018:27017'
-        volumes:
-            - type: bind
-              source: ./platforms/data/mongodb/restaurant-service
-              target: /data/db
-        networks:
-            - api_network
-
-    # sqlserver-auth:
-    #    image: mcr.microsoft.com/mssql/server:2019-latest
-    #    container_name: sqlserver-auth
-    #    environment:
-    #        SA_PASSWORD: 'YourStrong!Passw0rd'
-    #        ACCEPT_EULA: 'Y'
-    #    ports:
-    #        - '1433:1433'
-    #    volumes:
-    #        - type: bind
-    #          source: ./platforms/data/sqlserver/auth-service
-    #          target: /var/opt/mssql
-    #    networks:
-    #        - api_network
 
 networks:
     api_network:

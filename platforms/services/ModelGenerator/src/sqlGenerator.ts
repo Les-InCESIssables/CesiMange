@@ -299,11 +299,12 @@ function generateEntityContent(className: string, tableName: string, schema: Tab
 function generateCritereDTOContent(className: string, schema: TableSchema): string
 {
     let content = `import { ObjectLiteral } from "typeorm";\n`;
+    content += `import { BaseCritereDTO } from "../../../../../../services/data-access-layer/src/models/base/BaseCritereDTO";\n\n`
     content += `/**\n`;
     content += ` * CritereDTO pour la recherche d'entités SQL Server ${className}\n`;
     content += ` * @author DTO Generator - ${new Date().toISOString()} - Creation\n`;
     content += ` */\n`;
-    content += `export class ${className}CritereDTO implements ObjectLiteral\n{\n`;
+    content += `export class ${className}CritereDTO extends BaseCritereDTO implements ObjectLiteral\n{\n`;
 
     // Ajouter les propriétés pour la recherche
     schema.columns.forEach(column =>

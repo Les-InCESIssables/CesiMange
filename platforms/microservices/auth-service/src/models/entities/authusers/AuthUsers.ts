@@ -2,16 +2,16 @@ import { Entity, Column, PrimaryColumn, ObjectLiteral, PrimaryGeneratedColumn } 
 
 /**
  * Entit� TypeORM pour la table SQL Server T_AUTH_USERS
- * @author Entity Generator - 2025-04-02T16:35:50.226Z - Creation
+ * @author Entity Generator - 2025-04-03T17:32:20.317Z - Creation
  */
 @Entity("T_AUTH_USERS")
 export class AuthUsers implements ObjectLiteral
 {
     /**
-     * auth_user_id
+     * id
      */
     @PrimaryGeneratedColumn()
-    auth_user_id?: number;
+    id?: number;
 
     /**
      * email

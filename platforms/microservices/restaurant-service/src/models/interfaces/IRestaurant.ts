@@ -14,4 +14,5 @@ export interface IRestaurant extends Document {
   delivery_options: Record<string, any>;
   created_at: Date;
   updated_at: Date;
+  updatedAt?: Date;
 }

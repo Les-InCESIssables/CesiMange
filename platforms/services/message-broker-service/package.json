@@ -1,0 +1,31 @@
+{
+  "name": "kafka-simple",
+  "version": "1.0.0",
+  "description": "Simple Kafka client for microservices communication",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "start:producer": "ts-node examples/simple-producer.ts",
+    "start:consumer": "ts-node examples/simple-consumer.ts",
+    "start:pubsub": "ts-node examples/pub-sub.ts"
+  },
+  "keywords": [
+    "kafka",
+    "microservices",
+    "messaging"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "kafkajs": "^2.2.4",
+    "uuid": "^9.0.0",
+    "winston": "^3.11.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.5.9",
+    "@types/uuid": "^9.0.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.2.2"
+  }
+}

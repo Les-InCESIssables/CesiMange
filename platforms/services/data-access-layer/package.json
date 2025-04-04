@@ -40,7 +40,8 @@
     "eslint": "^8.21.0",
     "nodemon": "^3.1.9",
     "ts-node": "^10.9.2",
-    "typescript": "^4.5.2"
+    "typescript": "^4.5.2",
+    "kafkajs": "2.3.0-beta.3"
   },
   "eslintConfig": {
     "parser": "@typescript-eslint/parser",

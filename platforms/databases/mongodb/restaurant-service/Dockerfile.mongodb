@@ -1,0 +1,8 @@
+FROM mongo:latest
+
+# Copier le dossier seed dans /docker-entrypoint-initdb.d/ pour l'initialisation
+COPY seed/ /docker-entrypoint-initdb.d/
+
+EXPOSE 27017
+
+CMD ["mongod"]

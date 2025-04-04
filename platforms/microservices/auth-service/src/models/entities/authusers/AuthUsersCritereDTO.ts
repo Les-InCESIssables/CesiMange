@@ -1,14 +1,16 @@
 import { ObjectLiteral } from "typeorm";
+import { BaseCritereDTO } from "../../../../../../services/data-access-layer/src/models/base/BaseCritereDTO";
+
 /**
  * CritereDTO pour la recherche d'entit�s SQL Server AuthUsers
- * @author DTO Generator - 2025-04-02T16:35:50.228Z - Creation
+ * @author DTO Generator - 2025-04-03T17:32:20.318Z - Creation
  */
-export class AuthUsersCritereDTO implements ObjectLiteral
+export class AuthUsersCritereDTO extends BaseCritereDTO implements ObjectLiteral
 {
     /**
-     * Crit�re de recherche pour auth_user_id
+     * Crit�re de recherche pour id
      */
-    auth_user_id?: number | undefined;
+    id?: number | undefined;
 
     /**
      * Crit�re de recherche pour email

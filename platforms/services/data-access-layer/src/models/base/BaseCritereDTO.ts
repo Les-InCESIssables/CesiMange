@@ -6,7 +6,7 @@ import { IBaseCritereDTO } from '../../interfaces/IBaseCritereDTO';
  */
 export abstract class BaseCritereDTO implements IBaseCritereDTO {
     //#region Properties
-    id?: string;
+    id?: number;
     ids?: string[];
     search?: string;
     page?: number;

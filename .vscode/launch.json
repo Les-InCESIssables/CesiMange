@@ -4,24 +4,30 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Debug User Service",
+            "name": "Debug User Service with Nodemon",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": ["nodemon", "--exec", "ts-node -r tsconfig-paths/register", "src/app.ts"],
             "skipFiles": ["<node_internals>/**"],
-            "program": "${workspaceFolder}/platforms/microservices/user-service/dist/microservices/user-service/src/app.js",
-            "outFiles": [
-                "${workspaceFolder}/platforms/microservices/user-service/dist/microservices/user-service/**/*.js",
-                "${workspaceFolder}/platforms/data/data-access-layer/dist/services/data-access-layer/**/*.js",
-                "${workspaceFolder}/platforms/data/base-classes/dist/services/base-classes/**/*.js"
-            ],
-            "sourceMaps": true,
-            "resolveSourceMapLocations": [
-                "${workspaceFolder}/platforms/microservices/user-service/**",
-                "${workspaceFolder}/platforms/data/data-access-layer/**",
-                "${workspaceFolder}/platforms/data/base-classes/**",
-                "!**/node_modules/**"
-            ],
-            "preLaunchTask": "tsc: build - platforms/microservices/user-service/tsconfig.json",
+            "restart": true,
             "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}"
+            "cwd": "${workspaceFolder}/platforms/microservices/user-service"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Debug Restaurant Service with Nodemon",
+            "runtimeExecutable": "npx",
+            "runtimeArgs": ["nodemon", "--exec", "ts-node -r tsconfig-paths/register", "src/app.ts"],
+            "skipFiles": ["<node_internals>/**"],
+            "restart": true,
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/platforms/microservices/restaurant-service"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Debug All Microservices (Nodemon)",
+            "configurations": ["Debug User Service with Nodemon", "Debug Restaurant Service with Nodemon"]
         }
     ]
 }

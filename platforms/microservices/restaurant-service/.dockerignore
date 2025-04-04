@@ -1,0 +1,24 @@
+# Exclure le dossier node_modules (les dépendances seront installées dans l'image)
+node_modules
+
+# Exclure les fichiers de log
+*.log
+
+# Exclure les fichiers d'environnement (ils seront fournis via Docker Compose)
+.env
+.env.*
+
+# Exclure les fichiers et dossiers de contrôle de version
+.git
+.gitignore
+
+# Exclure les dossiers de tests (si vous ne souhaitez pas les copier dans l'image)
+__tests__
+tests
+
+# Exclure la documentation
+docs
+
+# Exclure le fichier Dockerfile et .dockerignore s'ils ne sont pas nécessaires dans l'image finale
+Dockerfile*
+.dockerignore

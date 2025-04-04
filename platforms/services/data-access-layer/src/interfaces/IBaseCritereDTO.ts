@@ -9,7 +9,7 @@ export interface IBaseCritereDTO
     /**
      * Identifiant unique de l'élément recherché
      */
-    id?: string;
+    id?: number;
 
     /**
      * Liste d'identifiants pour recherche multiple

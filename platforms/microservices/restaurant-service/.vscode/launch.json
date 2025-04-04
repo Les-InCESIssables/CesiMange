@@ -4,11 +4,33 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
-      "skipFiles": [ "<node_internals>/**" ],
-      "program": "${workspaceFolder}/dist/restaurant-service/app.js",
-      "cwd": "${workspaceFolder}",
-      "console": "externalTerminal"
+      "name": "Debug Application with Nodemon",
+      "skipFiles": [
+        "<node_internals>/**",
+        "**/node_modules/**",
+        "**/node_modules/nodemon/**"
+      ],
+      "runtimeExecutable": "npm",
+      "runtimeArgs": [ "run", "dev" ],
+      "outFiles": [
+        "${workspaceFolder}/dist/microservices/restaurant-service/src/**/*.js",
+        "${workspaceFolder}/../../services/data-access-layer/dist/**/*.js",
+        "${workspaceFolder}/../../services/base-classes/dist/**/*.js",
+        "${workspaceFolder}/../../services/message-broker-service/dist/**/*.js"
+      ],
+      "sourceMaps": true,
+      "resolveSourceMapLocations": [
+        "${workspaceFolder}/**",
+        "${workspaceFolder}/../../services/data-access-layer/**",
+        "${workspaceFolder}/../../services/base-classes/**",
+        "${workspaceFolder}/../../services/message-broker-service/**",
+        "!**/node_modules/**"
+      ],
+      "restart": true,
+      "console": "externalTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "preLaunchTask": "tsc: build - tsconfig.json",
+      "cwd": "${workspaceFolder}"
     }
   ]
 }

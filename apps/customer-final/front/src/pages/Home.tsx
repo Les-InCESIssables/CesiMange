@@ -15,7 +15,7 @@ export const Home: React.FC = () => {
 
     return (
         <div>
-            <h1>Users List</h1>
+            <h1 className="text-amber-300">Users List</h1>
             <ul>
                 {Array.isArray(users) && users.length > 0 ? (
                     users.map((user: any) => (
